@@ -77,7 +77,7 @@ async function renderHostels(q = '') {
             ZMW ${minPrice.toLocaleString()}
             <span style="font-size:11px;color:var(--muted);font-weight:400;">/mo</span>
           </div>
-          <div class="room-avail">${avail === 0 ? 'Booked' : avail + ' available'}</div>
+          <div class="room-avail">${avail === 0 ? 'Fully Booked' : avail + ' available'}</div>
         </div>
       </div>`;
   }).join('');
