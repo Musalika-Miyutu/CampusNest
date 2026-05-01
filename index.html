@@ -4,29 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusNest — Student Housing Platform</title>
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
-  <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
-
-  <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     LOADING SCREEN
-═══════════════════════════════════════════ -->
+<!-- LOADING -->
 <div id="page-loading">
   <div class="spinner"></div>
   <p style="color:var(--muted);font-size:14px;">Loading CampusNest...</p>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     LANDING PAGE
-═══════════════════════════════════════════ -->
+<!-- LANDING -->
 <div id="page-landing" class="hidden">
   <nav class="landing-nav">
     <div class="logo">Campus<span>Nest</span></div>
@@ -35,7 +25,6 @@
       <button class="btn btn-primary" onclick="showAuth('tenant','register')">Get Started</button>
     </div>
   </nav>
-
   <div class="landing-hero">
     <div class="hero-tag">🏠 Campus Housing Platform</div>
     <h1 class="hero-title">Find your perfect<br/><em>campus home</em></h1>
@@ -45,100 +34,52 @@
       <button class="hero-btn-landlord" onclick="showAuth('landlord','login')">🔑 I'm a Landlord</button>
     </div>
   </div>
-
   <div class="hero-cards">
-    <div class="hero-stat">
-      <div class="hero-stat-num" id="stat-hostels">—</div>
-      <div class="hero-stat-label">Hostels Listed</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num" id="stat-rooms">—</div>
-      <div class="hero-stat-label">Rooms Available</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num" id="stat-users">—</div>
-      <div class="hero-stat-label">Students Registered</div>
-    </div>
+    <div class="hero-stat"><div class="hero-stat-num" id="stat-hostels">—</div><div class="hero-stat-label">Hostels Listed</div></div>
+    <div class="hero-stat"><div class="hero-stat-num" id="stat-rooms">—</div><div class="hero-stat-label">Rooms Available</div></div>
+    <div class="hero-stat"><div class="hero-stat-num" id="stat-users">—</div><div class="hero-stat-label">Students Registered</div></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     AUTH MODAL
-═══════════════════════════════════════════ -->
+<!-- AUTH MODAL -->
 <div class="modal-overlay hidden" id="auth-modal" onclick="closeAuthIfBg(event)">
   <div class="modal" style="position:relative;">
     <button class="modal-close" onclick="closeAuth()">✕</button>
-
-    <!-- Role Toggle -->
     <div class="modal-toggle">
       <button class="modal-toggle-btn active" onclick="setRole('tenant')">🎓 Tenant</button>
       <button class="modal-toggle-btn" onclick="setRole('landlord')">🔑 Landlord</button>
     </div>
-
-    <!-- Login View -->
     <div id="auth-login-view">
       <div class="modal-title">Welcome back</div>
       <div class="modal-sub">Sign in to your account</div>
       <div class="modal-form">
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" id="login-email" placeholder="you@example.com" />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="login-pass" placeholder="••••••••" />
-        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="login-email" placeholder="you@example.com" /></div>
+        <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" /></div>
         <div id="login-error" class="error-msg hidden"></div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()">
-          Sign In →
-        </button>
+        <button class="btn btn-primary btn-full" onclick="doLogin()">Sign In →</button>
       </div>
-      <div class="modal-footer">
-        No account? <a onclick="switchAuthView('register')">Register here</a>
-      </div>
+      <div class="modal-footer">No account? <a onclick="switchAuthView('register')">Register here</a></div>
     </div>
-
-    <!-- Register View -->
     <div id="auth-register-view" class="hidden">
       <div class="modal-title">Create account</div>
       <div class="modal-sub">Join CampusNest today</div>
       <div class="modal-form">
         <div class="grid-2">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" id="reg-first" placeholder="John" />
-          </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" id="reg-last" placeholder="Doe" />
-          </div>
+          <div class="form-group"><label>First Name</label><input type="text" id="reg-first" placeholder="John" /></div>
+          <div class="form-group"><label>Last Name</label><input type="text" id="reg-last" placeholder="Doe" /></div>
         </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" id="reg-email" placeholder="you@example.com" />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="reg-pass" placeholder="Min 6 characters" />
-        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="reg-email" placeholder="you@example.com" /></div>
+        <div class="form-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Min 6 characters" /></div>
         <div id="reg-error" class="error-msg hidden"></div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doRegister()">
-          Create Account →
-        </button>
+        <button class="btn btn-primary btn-full" onclick="doRegister()">Create Account →</button>
       </div>
-      <div class="modal-footer">
-        Have an account? <a onclick="switchAuthView('login')">Sign in</a>
-      </div>
+      <div class="modal-footer">Have an account? <a onclick="switchAuthView('login')">Sign in</a></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MAIN APP
-═══════════════════════════════════════════ -->
+<!-- APP -->
 <div id="page-app" class="hidden">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">Campus<span style="color:var(--text)">Nest</span></div>
     <div class="sidebar-user">
@@ -146,71 +87,57 @@
       <div class="sidebar-user-role" id="sb-role">—</div>
     </div>
 
-    <!-- Tenant Nav -->
+    <!-- TENANT NAV -->
     <div id="nav-tenant">
       <div class="nav-section">Explore</div>
-      <button class="nav-item active" onclick="navTo('t-browse')">
-        <span class="icon">🏠</span> Browse Hostels
-      </button>
-      <button class="nav-item" onclick="navTo('t-search')">
-        <span class="icon">🔍</span> Search Rooms
-      </button>
+      <button class="nav-item active" onclick="navTo('t-browse')"><span class="icon">🏠</span> Browse Hostels</button>
+      <button class="nav-item" onclick="navTo('t-search')"><span class="icon">🔍</span> Search Rooms</button>
       <div class="nav-section">Account</div>
       <button class="nav-item" onclick="navTo('t-messages')">
         <span class="icon">💬</span> Messages
         <span id="t-msg-badge" class="badge badge-yellow hidden" style="margin-left:auto;font-size:10px;"></span>
       </button>
-      <button class="nav-item" onclick="navTo('t-bookings')">
-        <span class="icon">📋</span> My Bookings
+      <button class="nav-item" onclick="navTo('t-bookings')"><span class="icon">📋</span> My Bookings</button>
+      <button class="nav-item" onclick="navTo('t-notifications')">
+        <span class="icon">🔔</span> Notifications
+        <span id="notif-badge-t" class="badge badge-red hidden" style="margin-left:auto;font-size:10px;"></span>
       </button>
+      <button class="nav-item" onclick="navTo('profile')"><span class="icon">👤</span> My Profile</button>
     </div>
 
-    <!-- Landlord Nav -->
+    <!-- LANDLORD NAV -->
     <div id="nav-landlord" class="hidden">
       <div class="nav-section">Manage</div>
-      <button class="nav-item active" onclick="navTo('l-dashboard')">
-        <span class="icon">📊</span> Dashboard
-      </button>
-      <button class="nav-item" onclick="navTo('l-rooms')">
-        <span class="icon">🏠</span> My Rooms
-      </button>
-      <button class="nav-item" onclick="navTo('l-add')">
-        <span class="icon">➕</span> Add Room
-      </button>
+      <button class="nav-item active" onclick="navTo('l-dashboard')"><span class="icon">📊</span> Dashboard</button>
+      <button class="nav-item" onclick="navTo('l-rooms')"><span class="icon">🏠</span> My Rooms</button>
+      <button class="nav-item" onclick="navTo('l-add')"><span class="icon">➕</span> Add Room</button>
       <div class="nav-section">Communication</div>
       <button class="nav-item" onclick="navTo('l-messages')">
         <span class="icon">💬</span> Messages
         <span id="l-msg-badge" class="badge badge-yellow hidden" style="margin-left:auto;font-size:10px;"></span>
       </button>
-      <button class="nav-item" onclick="navTo('l-deals')">
-        <span class="icon">🤝</span> Deals
+      <button class="nav-item" onclick="navTo('l-deals')"><span class="icon">🤝</span> Deals</button>
+      <button class="nav-item" onclick="navTo('l-notifications')">
+        <span class="icon">🔔</span> Notifications
+        <span id="notif-badge-l" class="badge badge-red hidden" style="margin-left:auto;font-size:10px;"></span>
       </button>
+      <div class="nav-section">Account</div>
+      <button class="nav-item" onclick="navTo('profile')"><span class="icon">👤</span> My Profile</button>
+      <button class="nav-item" onclick="navTo('admin')"><span class="icon">🛡️</span> Admin</button>
     </div>
 
     <div class="sidebar-bottom">
-      <button class="nav-item" onclick="doLogout()">
-        <span class="icon">↩</span> Sign Out
-      </button>
+      <button class="nav-item" onclick="doLogout()"><span class="icon">↩</span> Sign Out</button>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT AREA -->
   <main class="main-area">
 
-    <!-- ── TENANT: BROWSE HOSTELS ── -->
+    <!-- TENANT: BROWSE -->
     <div id="view-t-browse">
       <div class="topbar">
-        <div class="page-header" style="margin:0;">
-          <h1>Browse Hostels</h1>
-          <p>Explore all available hostels on campus</p>
-        </div>
-        <div class="search-bar">
-          <span>🔍</span>
-          <input
-            placeholder="Search hostels..."
-            oninput="filterHostels(this.value)"
-            id="hostel-search-input" />
-        </div>
+        <div class="page-header" style="margin:0;"><h1>Browse Hostels</h1><p>Explore all available hostels on campus</p></div>
+        <div class="search-bar"><span>🔍</span><input placeholder="Search hostels..." oninput="filterHostels(this.value)" id="hostel-search-input" /></div>
       </div>
       <div class="filter-row">
         <span style="font-size:13px;color:var(--muted);">Filter:</span>
@@ -220,48 +147,18 @@
         <span class="tag" onclick="toggleHostelFilter(this,'mixed')">Mixed</span>
         <span class="tag" onclick="toggleHostelFilter(this,'ensuite')">En-Suite</span>
       </div>
-      <div class="hostel-grid" id="hostel-grid">
-        <p style="color:var(--muted);">Loading hostels...</p>
-      </div>
+      <div class="hostel-grid" id="hostel-grid"><p style="color:var(--muted);">Loading hostels...</p></div>
     </div>
 
-    <!-- ── TENANT: SEARCH ROOMS ── -->
+    <!-- TENANT: SEARCH -->
     <div id="view-t-search" class="hidden">
-      <div class="page-header">
-        <h1>Search Rooms</h1>
-        <p>Find the perfect room by floor, price, and preferences</p>
-      </div>
+      <div class="page-header"><h1>Search Rooms</h1><p>Find the perfect room by floor, price, and preferences</p></div>
       <div class="card" style="margin-bottom:24px;">
         <div class="grid-2">
-          <div class="form-group">
-            <label>Hostel</label>
-            <select id="filter-hostel" title="select hostel">
-              <option value="">Any Hostel</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Floor</label>
-            <select id="filter-floor" title="select floor">
-              <option value="">Any Floor</option>
-              <option>Ground Floor</option>
-              <option>1st Floor</option>
-              <option>2nd Floor</option>
-              <option>3rd Floor</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Max Price (ZMW / month)</label>
-            <input type="number" id="filter-price" placeholder="e.g. 2500" />
-          </div>
-          <div class="form-group">
-            <label>Preference</label>
-            <select id="filter-pref" title="select preference">
-              <option value="">Any</option>
-              <option>Male Only</option>
-              <option>Female Only</option>
-              <option>Mixed</option>
-            </select>
-          </div>
+          <div class="form-group"><label>Hostel</label><select id="filter-hostel" title="Select hostel"><option value="">Any Hostel</option></select></div>
+          <div class="form-group"><label>Floor</label><select id="filter-floor" title="Select floor"><option value="">Any Floor</option><option>Ground Floor</option><option>1st Floor</option><option>2nd Floor</option><option>3rd Floor</option></select></div>
+          <div class="form-group"><label>Max Price (ZMW / month)</label><input type="number" id="filter-price" placeholder="e.g. 2500" /></div>
+          <div class="form-group"><label>Preference</label><select id="filter-pref" title="Select preference"><option value="">Any</option><option>Male Only</option><option>Female Only</option><option>Mixed</option></select></div>
         </div>
         <div style="margin-top:16px;display:flex;gap:10px;">
           <button class="btn btn-primary" onclick="runRoomSearch()">Search Rooms</button>
@@ -269,97 +166,70 @@
         </div>
       </div>
       <div id="search-results" class="room-list">
-        <div class="room-row header">
-          <div>Room #</div><div>Hostel</div><div>Floor</div>
-          <div>Price/mo</div><div>Pref.</div><div>Action</div>
-        </div>
+        <div class="room-row header"><div>Room #</div><div>Hostel</div><div>Floor</div><div>Price/mo</div><div>Pref.</div><div>Action</div></div>
       </div>
     </div>
 
-    <!-- ── TENANT: MESSAGES ── -->
+    <!-- TENANT: MESSAGES -->
     <div id="view-t-messages" class="hidden">
-      <div class="page-header">
-        <h1>Messages</h1>
-        <p>Chat directly with landlords</p>
-      </div>
+      <div class="page-header"><h1>Messages</h1><p>Chat directly with landlords</p></div>
       <div class="chat-layout" id="t-chat-layout"></div>
     </div>
 
-    <!-- ── TENANT: BOOKINGS ── -->
+    <!-- TENANT: BOOKINGS -->
     <div id="view-t-bookings" class="hidden">
-      <div class="page-header">
-        <h1>My Bookings</h1>
-        <p>Track your room enquiries and confirmed deals</p>
-      </div>
+      <div class="page-header"><h1>My Bookings</h1><p>Track your room enquiries and confirmed deals</p></div>
       <div id="bookings-list" class="notif-list"></div>
     </div>
 
-    <!-- ── LANDLORD: DASHBOARD ── -->
-    <div id="view-l-dashboard" class="hidden">
-      <div class="page-header">
-        <h1>Landlord Dashboard</h1>
-        <p>Overview of your listings and activity</p>
+    <!-- TENANT: NOTIFICATIONS -->
+    <div id="view-t-notifications" class="hidden">
+      <div class="topbar">
+        <div class="page-header" style="margin:0;"><h1>Notifications</h1><p>Stay up to date with your activity</p></div>
+        <button class="btn btn-outline" onclick="markAllRead()">Mark all as read</button>
       </div>
+      <div id="notifications-list" class="notif-list"></div>
+    </div>
+
+    <!-- LANDLORD: DASHBOARD -->
+    <div id="view-l-dashboard" class="hidden">
+      <div class="page-header"><h1>Landlord Dashboard</h1><p>Overview of your listings and activity</p></div>
       <div class="stat-grid" id="l-stats"></div>
       <div class="grid-2">
-        <div class="card">
-          <div class="card-title">📬 Recent Enquiries</div>
-          <div id="l-recent-enquiries" class="notif-list"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">🏠 Room Status</div>
-          <div id="l-room-status-list" class="room-list"></div>
-        </div>
+        <div class="card"><div class="card-title">📬 Recent Enquiries</div><div id="l-recent-enquiries" class="notif-list"></div></div>
+        <div class="card"><div class="card-title">🏠 Room Status</div><div id="l-room-status-list" class="room-list"></div></div>
       </div>
     </div>
 
-    <!-- ── LANDLORD: MY ROOMS ── -->
+    <!-- LANDLORD: MY ROOMS -->
     <div id="view-l-rooms" class="hidden">
       <div class="topbar">
-        <div class="page-header" style="margin:0;">
-          <h1>My Rooms</h1>
-          <p>All your listed rooms</p>
-        </div>
+        <div class="page-header" style="margin:0;"><h1>My Rooms</h1><p>All your listed rooms</p></div>
         <button class="btn btn-primary" onclick="navTo('l-add')">+ Add Room</button>
       </div>
       <div class="room-list">
-        <div class="room-row header">
-          <div>Room #</div><div>Hostel</div><div>Floor</div>
-          <div>Price/mo</div><div>Status</div><div>Actions</div>
-        </div>
+        <div class="room-row header"><div>Room #</div><div>Hostel</div><div>Floor</div><div>Price/mo</div><div>Status</div><div>Actions</div></div>
         <div id="l-room-rows"></div>
       </div>
     </div>
 
-    <!-- ── LANDLORD: ADD ROOM ── -->
+    <!-- LANDLORD: ADD ROOM -->
     <div id="view-l-add" class="hidden">
-      <div class="page-header">
-        <h1>Add New Room</h1>
-        <p>List a room in your hostel</p>
-      </div>
+      <div class="page-header"><h1>Add New Room</h1><p>List a room in your hostel</p></div>
       <div class="form-card">
         <div class="grid-2">
-          <div class="form-group">
-            <label>Hostel Name</label>
-            <input type="text" id="add-hostel-name" placeholder="e.g. Sunrise Hostel" />
-          </div>
-          <div class="form-group">
-            <label>Room Number</label>
-            <input type="text" id="add-room-num" placeholder="e.g. 204" />
-          </div>
-          <div class="form-group">
-            <label>Floor</label>
-            <select id="add-floor" title="select floor">
-              <option>Ground Floor</option>
-              <option>1st Floor</option>
-              <option>2nd Floor</option>
-              <option>3rd Floor</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Monthly Rent (ZMW)</label>
-            <input type="number" id="add-price" placeholder="e.g. 2000" />
-          </div>
+          <div class="form-group"><label>Hostel Name</label><input type="text" id="add-hostel-name" placeholder="e.g. Sunrise Hostel" /></div>
+          <div class="form-group"><label>Room Number</label><input type="text" id="add-room-num" placeholder="e.g. 204" /></div>
+          <div class="form-group"><label>Floor</label><select id="add-floor" title="Select floor"><option>Ground Floor</option><option>1st Floor</option><option>2nd Floor</option><option>3rd Floor</option></select></div>
+          <div class="form-group"><label>Monthly Rent (ZMW)</label><input type="number" id="add-price" placeholder="e.g. 2000" /></div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">Hostel Photo</div>
+          <label class="hostel-img-upload" for="add-room-image">
+            <span>📷</span> Click to upload a hostel photo
+            <input type="file" id="add-room-image" accept="image/*" style="display:none;" onchange="previewHostelImage(this)" />
+          </label>
+          <img id="hostel-img-preview" class="hostel-img-preview" alt="Preview" />
         </div>
         <div class="form-section">
           <div class="form-section-title">Tenant Preference</div>
@@ -381,10 +251,7 @@
           </div>
         </div>
         <div class="form-section">
-          <div class="form-group">
-            <label>Additional Notes</label>
-            <textarea id="add-notes" rows="3" placeholder="Anything tenants should know..."></textarea>
-          </div>
+          <div class="form-group"><label>Additional Notes</label><textarea id="add-notes" rows="3" placeholder="Anything tenants should know..."></textarea></div>
         </div>
         <div style="margin-top:24px;display:flex;gap:10px;">
           <button class="btn btn-primary" onclick="addRoom()">List Room</button>
@@ -393,25 +260,107 @@
       </div>
     </div>
 
-    <!-- ── LANDLORD: MESSAGES ── -->
+    <!-- LANDLORD: MESSAGES -->
     <div id="view-l-messages" class="hidden">
-      <div class="page-header">
-        <h1>Messages</h1>
-        <p>Respond to tenant enquiries</p>
-      </div>
+      <div class="page-header"><h1>Messages</h1><p>Respond to tenant enquiries</p></div>
       <div class="chat-layout" id="l-chat-layout"></div>
     </div>
 
-    <!-- ── LANDLORD: DEALS ── -->
+    <!-- LANDLORD: DEALS -->
     <div id="view-l-deals" class="hidden">
-      <div class="page-header">
-        <h1>Deals</h1>
-        <p>Confirm or decline room booking requests</p>
-      </div>
+      <div class="page-header"><h1>Deals</h1><p>Confirm or decline room booking requests</p></div>
       <div id="deals-list" class="notif-list"></div>
     </div>
 
-    <!-- ── HOSTEL DETAIL ── -->
+    <!-- LANDLORD: NOTIFICATIONS -->
+    <div id="view-l-notifications" class="hidden">
+      <div class="topbar">
+        <div class="page-header" style="margin:0;"><h1>Notifications</h1><p>Stay up to date with your activity</p></div>
+        <button class="btn btn-outline" onclick="markAllRead()">Mark all as read</button>
+      </div>
+      <div id="notifications-list" class="notif-list"></div>
+    </div>
+
+    <!-- PROFILE PAGE (shared by both roles) -->
+    <div id="view-profile" class="hidden">
+      <div class="page-header"><h1>My Profile</h1><p>Manage your personal details</p></div>
+      <div class="profile-card">
+
+        <!-- VIEW MODE -->
+        <div id="profile-view-mode">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar">
+              <img id="profile-avatar-img" src="" alt="Avatar" class="hidden" />
+              <span id="profile-avatar-placeholder">—</span>
+            </div>
+            <div>
+              <div class="profile-name" id="profile-name">—</div>
+              <div class="profile-role" id="profile-role">—</div>
+              <div class="profile-email" id="profile-email">—</div>
+            </div>
+          </div>
+          <div class="profile-info-grid">
+            <div class="profile-info-item">
+              <div class="profile-info-label">Phone</div>
+              <div class="profile-info-value" id="view-phone">—</div>
+            </div>
+            <div class="profile-info-item">
+              <div class="profile-info-label">Contact Email</div>
+              <div class="profile-info-value" id="view-contact-email">—</div>
+            </div>
+            <div class="profile-info-item" style="grid-column:span 2;">
+              <div class="profile-info-label">Bio</div>
+              <div class="profile-info-value" id="view-bio">—</div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="toggleEditMode()">✏️ Edit Profile</button>
+        </div>
+
+        <!-- EDIT MODE -->
+        <div id="profile-edit-mode" class="hidden">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar">
+              <img id="profile-avatar-img-edit" src="" alt="Avatar" class="hidden" />
+              <span id="profile-avatar-placeholder-edit">—</span>
+            </div>
+            <div>
+              <label class="avatar-upload-label" for="edit-avatar">
+                📷 Change Photo
+                <input type="file" id="edit-avatar" accept="image/*" style="display:none;" onchange="previewEditAvatar(this)" />
+              </label>
+            </div>
+          </div>
+          <div class="grid-2" style="margin-bottom:16px;">
+            <div class="form-group"><label>Full Name</label><input type="text" id="edit-name" placeholder="Your full name" /></div>
+            <div class="form-group"><label>Phone Number</label><input type="text" id="edit-phone" placeholder="+260 97 000 0000" /></div>
+            <div class="form-group"><label>Contact Email</label><input type="email" id="edit-contact-email" placeholder="public contact email" /></div>
+          </div>
+          <div class="form-group" style="margin-bottom:20px;">
+            <label>Bio</label>
+            <textarea id="edit-bio" rows="3" placeholder="Tell tenants or landlords a bit about yourself..."></textarea>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+            <button class="btn btn-outline" onclick="toggleEditMode()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN PAGE -->
+    <div id="view-admin" class="hidden">
+      <div class="page-header"><h1>Admin Dashboard</h1><p>Manage all users, rooms, and platform data</p></div>
+      <div class="stat-grid" id="admin-stats"></div>
+      <div class="admin-tabs">
+        <button class="admin-tab-btn active" id="admin-tab-users" onclick="loadAdminUsers()">👥 Users</button>
+        <button class="admin-tab-btn" id="admin-tab-rooms" onclick="loadAdminRooms()">🏠 Rooms</button>
+        <button class="admin-tab-btn" id="admin-tab-reviews" onclick="loadAdminReviews()">⭐ Reviews</button>
+        <button class="admin-tab-btn" id="admin-tab-deals" onclick="loadAdminDeals()">🤝 Deals</button>
+      </div>
+      <div class="admin-tab-content" id="admin-tab-content"></div>
+    </div>
+
+    <!-- HOSTEL DETAIL -->
     <div id="view-hostel-detail" class="hidden">
       <div style="margin-bottom:16px;">
         <button class="btn btn-ghost" onclick="closeHostelDetail()">← Back to Hostels</button>
@@ -422,81 +371,97 @@
   </main>
 </div>
 
-<!-- TOAST NOTIFICATIONS -->
 <div class="toast-area" id="toast-area"></div>
 
-<!-- ═══════════════════════════════════════════
-     SCRIPTS — load in this exact order
-═══════════════════════════════════════════ -->
+<!-- SCRIPTS — load in this exact order -->
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/rooms.js"></script>
 <script src="assets/js/chat.js"></script>
 <script src="assets/js/deals.js"></script>
+<script src="assets/js/profile.js"></script>
+<script src="assets/js/notifications.js"></script>
+<script src="assets/js/reviews.js"></script>
+<script src="assets/js/admin.js"></script>
 
 <script>
-  // ─── NAV ───────────────────────────────────────────
-  function navTo(view) {
-    document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
-    const el = document.getElementById('view-' + view);
-    if (el) el.classList.remove('hidden');
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(b => {
-      if (b.getAttribute('onclick')?.includes("'" + view + "'")) b.classList.add('active');
-    });
-    activeView = view;
-    if (view === 't-browse')   renderHostels();
-    if (view === 't-search')   populateHostelSelect();
-    if (view === 't-messages') renderChat('t-chat-layout');
-    if (view === 't-bookings') renderBookings();
-    if (view === 'l-dashboard') renderLDashboard();
-    if (view === 'l-rooms')    renderLRooms();
-    if (view === 'l-messages') renderChat('l-chat-layout');
-    if (view === 'l-deals')    renderDeals();
-    if (view === 'l-add')      resetAddForm();
-  }
+// ─── NAV ─────────────────────────────────────────────
+function navTo(view) {
+  document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
+  const el = document.getElementById('view-' + view);
+  if (el) el.classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => {
+    if (b.getAttribute('onclick')?.includes("'" + view + "'")) b.classList.add('active');
+  });
+  activeView = view;
+  if (view === 't-browse')         renderHostels();
+  if (view === 't-search')         populateHostelSelect();
+  if (view === 't-messages')       renderChat('t-chat-layout');
+  if (view === 't-bookings')       renderBookings();
+  if (view === 't-notifications')  renderNotifications();
+  if (view === 'l-dashboard')      renderLDashboard();
+  if (view === 'l-rooms')          renderLRooms();
+  if (view === 'l-messages')       renderChat('l-chat-layout');
+  if (view === 'l-deals')          renderDeals();
+  if (view === 'l-notifications')  renderNotifications();
+  if (view === 'l-add')            resetAddForm();
+  if (view === 'profile')          renderProfile();
+  if (view === 'admin')            renderAdminDashboard();
+}
 
-  // ─── LANDING STATS ─────────────────────────────────
-  async function loadLandingStats() {
-    const { data: rooms } = await sb.from('rooms').select('hostel, status');
-    const { data: users } = await sb.from('profiles').select('role');
-    if (rooms) {
-      document.getElementById('stat-hostels').textContent =
-        new Set(rooms.map(r => r.hostel)).size || '0';
-      document.getElementById('stat-rooms').textContent =
-        rooms.filter(r => r.status === 'available').length || '0';
-    }
-    if (users) {
-      document.getElementById('stat-users').textContent =
-        users.filter(u => u.role === 'tenant').length || '0';
+// ─── IMAGE PREVIEW HELPERS ────────────────────────────
+function previewHostelImage(input) {
+  const file    = input.files[0];
+  const preview = document.getElementById('hostel-img-preview');
+  if (file) {
+    preview.src   = URL.createObjectURL(file);
+    preview.style.display = 'block';
+  }
+}
+
+function previewEditAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const img         = document.getElementById('profile-avatar-img-edit');
+  const placeholder = document.getElementById('profile-avatar-placeholder-edit');
+  img.src           = URL.createObjectURL(file);
+  img.classList.remove('hidden');
+  placeholder.classList.add('hidden');
+}
+
+// ─── LANDING STATS ────────────────────────────────────
+async function loadLandingStats() {
+  const { data: rooms } = await sb.from('rooms').select('hostel, status');
+  const { data: users } = await sb.from('profiles').select('role');
+  if (rooms) {
+    document.getElementById('stat-hostels').textContent = new Set(rooms.map(r => r.hostel)).size || '0';
+    document.getElementById('stat-rooms').textContent   = rooms.filter(r => r.status === 'available').length || '0';
+  }
+  if (users) {
+    document.getElementById('stat-users').textContent = users.filter(u => u.role === 'tenant').length || '0';
+  }
+}
+
+// ─── INIT ─────────────────────────────────────────────
+async function init() {
+  loadLandingStats();
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    const { data: profile } = await sb
+      .from('profiles').select('*').eq('id', session.user.id).single();
+    if (profile) {
+      await loginAs({
+        id: profile.id, name: profile.name,
+        role: profile.role, email: session.user.email
+      });
     }
   }
+  document.getElementById('page-loading').classList.add('hidden');
+  if (!session) document.getElementById('page-landing').classList.remove('hidden');
+}
 
-  // ─── INIT ───────────────────────────────────────────
-  async function init() {
-    loadLandingStats();
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      const { data: profile } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
-      if (profile) {
-        await loginAs({
-          id:    profile.id,
-          name:  profile.name,
-          role:  profile.role,
-          email: session.user.email
-        });
-      }
-    }
-    document.getElementById('page-loading').classList.add('hidden');
-    if (!session) document.getElementById('page-landing').classList.remove('hidden');
-  }
-
-  init();
+init();
 </script>
-
 </body>
 </html>

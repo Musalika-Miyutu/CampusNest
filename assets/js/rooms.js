@@ -345,24 +345,31 @@ async function addRoom() {
     return;
   }
 
+  // Handle image upload
+  let image_url = null;
+  const imageFile = document.getElementById('add-room-image').files[0];
+  if (imageFile) {
+    const ext      = imageFile.name.split('.').pop();
+    const filePath = `${currentUser.id}/${hostel.replace(/\s+/g,'-')}-${Date.now()}.${ext}`;
+    const { error: uploadError } = await sb.storage
+      .from('hostel-images')
+      .upload(filePath, imageFile, { upsert: true });
+    if (!uploadError) {
+      const { data } = sb.storage.from('hostel-images').getPublicUrl(filePath);
+      image_url = data.publicUrl;
+    }
+  }
+
   const { data, error } = await sb.from('rooms').insert({
     landlord_id: currentUser.id,
-    hostel,
-    room_number,
-    floor,
-    price,
-    preference,
-    amenities,
-    notes,
+    hostel, room_number, floor, price,
+    preference, amenities, notes,
+    image_url,
     status: 'available'
   }).select().single();
 
-  if (error) {
-    toast('Failed to add room: ' + error.message, 'error');
-    return;
-  }
+  if (error) { toast('Failed to add room: ' + error.message, 'error'); return; }
 
-  // Add to local cache
   allRooms.push(data);
   toast('Room listed successfully!', 'success');
   navTo('l-rooms');
