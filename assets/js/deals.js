@@ -11,7 +11,6 @@ async function sendDeal(landlordId, roomId, hostelName, roomNum) {
     return;
   }
 
-  // Check if a deal already exists for this room
   const { data: existing } = await sb
     .from('deals')
     .select('id')
@@ -24,7 +23,6 @@ async function sendDeal(landlordId, roomId, hostelName, roomNum) {
     return;
   }
 
-  // Create the deal record
   const { error: dealError } = await sb.from('deals').insert({
     tenant_id:   currentUser.id,
     landlord_id: landlordId,
@@ -37,13 +35,20 @@ async function sendDeal(landlordId, roomId, hostelName, roomNum) {
     return;
   }
 
-  // Send an automatic message to notify the landlord
   await sb.from('messages').insert({
     from_user: currentUser.id,
     to_user:   landlordId,
     room_id:   roomId,
     text:      `📋 I'd like to formally book Room ${roomNum} at ${hostelName}. Can we finalize?`
   });
+
+  // Notify the landlord about the deal
+  await createNotification(
+    landlordId,
+    `Deal proposed by ${currentUser.name}`,
+    `Wants to book Room ${roomNum} at ${hostelName}`,
+    'deal'
+  );
 
   toast('Deal proposed! Awaiting landlord confirmation.', 'success');
   navTo('t-messages');
@@ -53,7 +58,6 @@ async function sendDeal(landlordId, roomId, hostelName, roomNum) {
 // Called when landlord clicks "Confirm Deal" in the chat
 
 async function confirmDeal(tenantId) {
-  // Find the pending deal between this landlord and tenant
   const { data: deal } = await sb
     .from('deals')
     .select('*')
@@ -67,34 +71,26 @@ async function confirmDeal(tenantId) {
     return;
   }
 
-  // Mark the deal as confirmed
-  const { error: dealError } = await sb
-    .from('deals')
-    .update({ status: 'confirmed' })
-    .eq('id', deal.id);
+  await sb.from('deals').update({ status: 'confirmed' }).eq('id', deal.id);
+  await sb.from('rooms').update({ status: 'booked' }).eq('id', deal.room_id);
 
-  if (dealError) {
-    toast('Failed to confirm deal. Try again.', 'error');
-    return;
-  }
-
-  // Mark the room as booked
-  await sb
-    .from('rooms')
-    .update({ status: 'booked' })
-    .eq('id', deal.room_id);
-
-  // Update local room cache
   const room = allRooms.find(r => r.id === deal.room_id);
   if (room) room.status = 'booked';
 
-  // Send a confirmation message to the tenant
   await sb.from('messages').insert({
     from_user: currentUser.id,
     to_user:   tenantId,
     room_id:   deal.room_id,
     text:      `✅ Deal confirmed! Room ${room?.room_number} at ${room?.hostel} is yours. Welcome aboard!`
   });
+
+  // Notify the tenant that their deal was confirmed
+  await createNotification(
+    tenantId,
+    '🎉 Deal Confirmed!',
+    `Your booking for Room ${room?.room_number} at ${room?.hostel} has been confirmed!`,
+    'deal'
+  );
 
   toast('Deal confirmed! Room marked as booked.', 'success');
   navTo('l-messages');

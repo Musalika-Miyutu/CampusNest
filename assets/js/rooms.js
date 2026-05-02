@@ -174,6 +174,14 @@ async function enquireRoom(roomId, landlordId, hostelName, roomNum) {
     return;
   }
 
+  // Notify the landlord about the enquiry
+  await createNotification(
+    landlordId,
+    `New enquiry from ${currentUser.name}`,
+    `Interested in Room ${roomNum} at ${hostelName}`,
+    'enquiry'
+  );
+
   toast('Enquiry sent! Check your messages.', 'success');
   updateMsgBadges();
   navTo('t-messages');

@@ -205,7 +205,6 @@ async function sendMsg(containerId, otherId) {
   const text = inp.value.trim();
   if (!text) return;
 
-  // Clear input immediately for better UX
   inp.value = '';
 
   const { error } = await sb.from('messages').insert({
@@ -219,7 +218,14 @@ async function sendMsg(containerId, otherId) {
     return;
   }
 
-  // Refresh the chat view to show the new message
+  // Notify the recipient
+  await createNotification(
+    otherId,
+    `New message from ${currentUser.name}`,
+    text.length > 60 ? text.slice(0, 60) + '...' : text,
+    'message'
+  );
+
   openChat(otherId, containerId);
 }
 
