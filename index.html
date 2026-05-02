@@ -10,6 +10,10 @@
 </head>
 <body>
 
+<!-- MOBILE HAMBURGER -->
+<button class="hamburger hidden" id="hamburger" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- LOADING -->
 <div id="page-loading">
   <div class="spinner"></div>
@@ -459,6 +463,37 @@ async function init() {
   }
   document.getElementById('page-loading').classList.add('hidden');
   if (!session) document.getElementById('page-landing').classList.remove('hidden');
+}
+
+// ─── MOBILE SIDEBAR ──────────────────────────────────
+function toggleSidebar() {
+  const sidebar  = document.querySelector('.sidebar');
+  const overlay  = document.getElementById('sidebar-overlay');
+  const isOpen   = sidebar.classList.contains('open');
+  if (isOpen) closeSidebar();
+  else openSidebar();
+}
+
+function openSidebar() {
+  document.querySelector('.sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// Close sidebar when a nav item is clicked on mobile
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (window.innerWidth <= 900) closeSidebar();
+  });
+});
+
+// Show/hide hamburger based on login state
+function showHamburger(show) {
+  document.getElementById('hamburger').classList.toggle('hidden', !show);
 }
 
 init();

@@ -18,14 +18,22 @@ async function createNotification(userId, title, message, type = 'system') {
 // ─── RENDER NOTIFICATIONS PAGE ───────────────────────
 
 async function renderNotifications() {
+  // Find whichever notifications list is currently visible
   const list = document.getElementById('notifications-list');
+  if (!list) return;
+
   list.innerHTML = '<p style="color:var(--muted);">Loading...</p>';
 
-  const { data: notifications } = await sb
+  const { data: notifications, error } = await sb
     .from('notifications')
     .select('*')
     .eq('user_id', currentUser.id)
     .order('created_at', { ascending: false });
+
+  if (error) {
+    list.innerHTML = '<p style="color:var(--muted);">Failed to load notifications.</p>';
+    return;
+  }
 
   if (!notifications?.length) {
     list.innerHTML = `
@@ -41,23 +49,22 @@ async function renderNotifications() {
 
   list.innerHTML = notifications.map(n => `
     <div class="notif-item ${n.is_read ? '' : 'unread'}"
-         onclick="markAsRead('${n.id}',this)">
+         onclick="markAsRead('${n.id}', this)">
       <div class="notif-icon">${getNotifIcon(n.type)}</div>
       <div class="notif-body">
         <div class="notif-title">${n.title}</div>
         <div class="notif-sub">${n.message}</div>
-        <div style="margin-top:6px;">
+        <div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
           <span style="font-size:11px;color:var(--muted);">
             ${formatNotifTime(n.created_at)}
           </span>
           ${!n.is_read
-            ? '<span class="badge badge-yellow" style="margin-left:8px;">New</span>'
+            ? '<span class="badge badge-yellow">New</span>'
             : ''}
         </div>
       </div>
     </div>`).join('');
 
-  // Update notification badge count
   updateNotifBadge();
 }
 

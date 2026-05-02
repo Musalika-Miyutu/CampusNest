@@ -154,6 +154,7 @@ async function loginAs(user) {
   subscribeToMessages();
   subscribeToNotifications();
   updateNotifBadge();
+  showHamburger(true);
 }
 
 // ─── LOGOUT ──────────────────────────────────────────
@@ -170,6 +171,7 @@ async function doLogout() {
   document.getElementById('page-app').classList.add('hidden');
   document.getElementById('page-landing').classList.remove('hidden');
   toast('Signed out successfully.', 'success');
+  showHamburger(false);
 }
 
 // ─── REAL-TIME MESSAGE SUBSCRIPTION ──────────────────
