@@ -3,23 +3,27 @@
 // ═══════════════════════════════════════════════════════
 
 // ─── CREATE A NOTIFICATION ───────────────────────────
-// Called internally whenever an action triggers an alert
 
 async function createNotification(userId, title, message, type = 'system') {
-  await sb.from('notifications').insert({
-    user_id: userId,
+  const { error } = await sb.from('notifications').insert({
+    user_id:  userId,
     title,
     message,
     type,
-    is_read: false
+    is_read:  false
   });
+  if (error) console.error('Notification insert error:', error.message);
 }
 
 // ─── RENDER NOTIFICATIONS PAGE ───────────────────────
 
 async function renderNotifications() {
-  // Find whichever notifications list is currently visible
-  const list = document.getElementById('notifications-list');
+  // Pick the correct container based on current user role
+  const containerId = currentUser.role === 'landlord'
+    ? 'l-notifications-list'
+    : 't-notifications-list';
+
+  const list = document.getElementById(containerId);
   if (!list) return;
 
   list.innerHTML = '<p style="color:var(--muted);">Loading...</p>';
@@ -31,7 +35,8 @@ async function renderNotifications() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    list.innerHTML = '<p style="color:var(--muted);">Failed to load notifications.</p>';
+    console.error('Fetch notifications error:', error.message);
+    list.innerHTML = '<p style="color:var(--red);">Failed to load notifications.</p>';
     return;
   }
 
@@ -76,7 +81,6 @@ async function markAsRead(notifId, el) {
     .update({ is_read: true })
     .eq('id', notifId);
 
-  // Remove unread styling immediately
   el.classList.remove('unread');
   const badge = el.querySelector('.badge-yellow');
   if (badge) badge.remove();
@@ -84,7 +88,7 @@ async function markAsRead(notifId, el) {
   updateNotifBadge();
 }
 
-// ─── MARK ALL NOTIFICATIONS AS READ ──────────────────
+// ─── MARK ALL AS READ ────────────────────────────────
 
 async function markAllRead() {
   await sb
@@ -97,7 +101,7 @@ async function markAllRead() {
   renderNotifications();
 }
 
-// ─── UPDATE NOTIFICATION BADGE IN SIDEBAR ────────────
+// ─── UPDATE NOTIFICATION BADGE ───────────────────────
 
 async function updateNotifBadge() {
   if (!currentUser) return;
@@ -108,7 +112,6 @@ async function updateNotifBadge() {
     .eq('user_id', currentUser.id)
     .eq('is_read', false);
 
-  // Handle both tenant and landlord badge IDs
   const badgeT = document.getElementById('notif-badge-t');
   const badgeL = document.getElementById('notif-badge-l');
 
@@ -122,7 +125,7 @@ async function updateNotifBadge() {
   }
 }
 
-// ─── SUBSCRIBE TO REAL-TIME NOTIFICATIONS ────────────
+// ─── REAL-TIME SUBSCRIPTION ──────────────────────────
 
 function subscribeToNotifications() {
   sb.channel(`notifications-${currentUser.id}`)
@@ -136,9 +139,7 @@ function subscribeToNotifications() {
       },
       (payload) => {
         updateNotifBadge();
-        // Show toast for the incoming notification
         toast(`🔔 ${payload.new.title}`, 'success');
-        // If they are on notifications page refresh it
         if (activeView === 't-notifications') renderNotifications();
         if (activeView === 'l-notifications') renderNotifications();
       }
@@ -162,10 +163,10 @@ function formatNotifTime(ts) {
   if (!ts) return '';
   const date = new Date(ts);
   const now  = new Date();
-  const diff = Math.floor((now - date) / 1000); // seconds
+  const diff = Math.floor((now - date) / 1000);
 
-  if (diff < 60)   return 'Just now';
-  if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+  if (diff < 60)    return 'Just now';
+  if (diff < 3600)  return `${Math.floor(diff / 60)} minutes ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
   return date.toLocaleDateString('en-GB', {
     day: 'numeric', month: 'short', year: 'numeric'

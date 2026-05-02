@@ -867,8 +867,8 @@ label {
 .hamburger {
   display: none;
   position: fixed;
-  top: 16px;
-  left: 16px;
+  top: 14px;
+  left: 14px;
   z-index: 2000;
   background: var(--card);
   border: 1px solid var(--border);
@@ -890,68 +890,182 @@ label {
   backdrop-filter: blur(2px);
 }
 
-@media (max-width: 900px) {
+/* ── SMALL PHONES (up to 480px) ── */
+@media (max-width: 480px) {
   .hamburger { display: flex; align-items: center; justify-content: center; }
 
   .sidebar {
+    width: 75vw;
+    max-width: 280px;
     transform: translateX(-100%);
     transition: transform .3s ease;
     z-index: 999;
   }
-
   .sidebar.open {
     transform: translateX(0);
     box-shadow: 4px 0 30px #0008;
   }
+  .sidebar-overlay.open { display: block; }
 
+  /* Sidebar content scaling */
+  .sidebar-logo     { font-size: 15px; padding-bottom: 16px; }
+  .sidebar-user-name { font-size: 13px; }
+  .sidebar-user-role { font-size: 10px; }
+  .nav-item         { font-size: 13px; padding: 9px 10px; }
+  .nav-item .icon   { font-size: 15px; width: 16px; }
+  .nav-section      { font-size: 9px; padding: 6px 10px 3px; }
+
+  /* Main area */
+  .main-area {
+    margin-left: 0;
+    padding: 70px 12px 20px;
+  }
+
+  /* Page headers */
+  .page-header h1 { font-size: 22px; }
+  .page-header p  { font-size: 13px; }
+
+  /* Topbar stacks vertically */
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* Search bar full width */
+  .search-bar { width: 100%; }
+
+  /* Hostel grid single column */
+  .hostel-grid { grid-template-columns: 1fr; }
+
+  /* Hostel card scaling */
+  .hostel-img  { height: 110px; font-size: 36px; }
+  .hostel-name { font-size: 14px; }
+  .hostel-loc  { font-size: 11px; }
+  .room-price  { font-size: 14px; }
+  .room-avail  { font-size: 11px; }
+
+  /* Stats 2 columns */
+  .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-value { font-size: 24px; }
+  .stat-label { font-size: 11px; }
+
+  /* Grid 2 stacks */
+  .grid-2 { grid-template-columns: 1fr; }
+
+  /* Room rows simplified */
+  .room-list { gap: 8px; }
+  .room-row {
+    grid-template-columns: 50px 1fr 80px 80px;
+    padding: 10px 12px;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .room-row > :nth-child(5),
+  .room-row > :nth-child(6) { display: none; }
+  .room-num { font-size: 13px; }
+
+  /* Chat layout */
+  .chat-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 60vh;
+  }
+  .chat-sidebar  { display: none; }
+  .chat-messages { padding: 14px; gap: 10px; }
+  .msg-bubble    { font-size: 13px; padding: 8px 12px; }
+  .chat-input-area { padding: 12px; gap: 8px; }
+
+  /* Badges */
+  .badge { font-size: 10px; padding: 2px 8px; }
+
+  /* Cards */
+  .card { padding: 16px; }
+  .card-title { font-size: 14px; }
+
+  /* Notifications */
+  .notif-item  { padding: 12px 14px; gap: 10px; }
+  .notif-icon  { font-size: 18px; }
+  .notif-title { font-size: 13px; }
+  .notif-sub   { font-size: 12px; }
+
+  /* Form card */
+  .form-card { padding: 16px; }
+
+  /* Profile */
+  .profile-card       { padding: 16px; }
+  .profile-avatar     { width: 60px; height: 60px; font-size: 20px; }
+  .profile-name       { font-size: 18px; }
+  .profile-info-grid  { grid-template-columns: 1fr; }
+
+  /* Admin tabs wrap */
+  .admin-tabs { flex-wrap: wrap; gap: 6px; }
+  .admin-tab-btn { font-size: 12px; padding: 8px 10px; }
+
+  /* Buttons */
+  .btn { font-size: 13px; padding: 9px 16px; }
+
+  /* Landing page */
+  .landing-nav  { padding: 14px 16px; }
+  .hero-title   { font-size: 32px; letter-spacing: -1px; }
+  .hero-sub     { font-size: 14px; }
+  .hero-cards   { gap: 10px; padding: 0 16px 40px; }
+  .hero-stat    { padding: 16px 20px; min-width: 100px; }
+  .hero-stat-num { font-size: 24px; }
+
+  /* Tags */
+  .tag      { font-size: 11px; padding: 3px 10px; }
+  .tags-row { gap: 6px; }
+
+  /* Filter row wraps */
+  .filter-row { gap: 6px; }
+}
+
+/* ── MEDIUM PHONES & TABLETS (481px to 900px) ── */
+@media (min-width: 481px) and (max-width: 900px) {
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+
+  .sidebar {
+    width: 260px;
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    z-index: 999;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 30px #0008;
+  }
   .sidebar-overlay.open { display: block; }
 
   .main-area {
     margin-left: 0;
-    padding: 20px 16px;
-    padding-top: 60px;
+    padding: 70px 24px 24px;
   }
+
+  .hostel-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .stat-grid   { grid-template-columns: repeat(3, 1fr); }
+  .grid-2      { grid-template-columns: 1fr 1fr; }
 
   .chat-layout {
     grid-template-columns: 1fr;
     height: auto;
-    min-height: 500px;
+    min-height: 60vh;
   }
-
   .chat-sidebar { display: none; }
-
-  .grid-2 { grid-template-columns: 1fr; }
 
   .room-row {
     grid-template-columns: 60px 1fr 90px 100px;
   }
-
   .room-row > :nth-child(5),
   .room-row > :nth-child(6) { display: none; }
-
-  .landing-nav { padding: 16px 20px; }
 
   .topbar {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-
   .search-bar { width: 100%; }
 
-  .hostel-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stat-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .admin-tabs {
-    flex-wrap: wrap;
-  }
-
-  .profile-info-grid {
-    grid-template-columns: 1fr;
-  }
+  .landing-nav { padding: 16px 24px; }
+  .hero-title  { font-size: clamp(32px, 6vw, 52px); }
 }
