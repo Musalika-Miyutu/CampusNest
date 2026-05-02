@@ -153,6 +153,7 @@ async function loginAs(user) {
   updateMsgBadges();
   subscribeToMessages();
   subscribeToNotifications();
+  updateNotifBadge();
 }
 
 // ─── LOGOUT ──────────────────────────────────────────

@@ -93,23 +93,32 @@ async function markAllRead() {
 // ─── UPDATE NOTIFICATION BADGE IN SIDEBAR ────────────
 
 async function updateNotifBadge() {
+  if (!currentUser) return;
+
   const { count } = await sb
     .from('notifications')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', currentUser.id)
     .eq('is_read', false);
 
-  const badge = document.getElementById('notif-badge');
-  if (badge) {
-    badge.textContent  = count || 0;
-    badge.classList.toggle('hidden', !count);
+  // Handle both tenant and landlord badge IDs
+  const badgeT = document.getElementById('notif-badge-t');
+  const badgeL = document.getElementById('notif-badge-l');
+
+  if (badgeT) {
+    badgeT.textContent = count || 0;
+    badgeT.classList.toggle('hidden', !count);
+  }
+  if (badgeL) {
+    badgeL.textContent = count || 0;
+    badgeL.classList.toggle('hidden', !count);
   }
 }
 
 // ─── SUBSCRIBE TO REAL-TIME NOTIFICATIONS ────────────
 
 function subscribeToNotifications() {
-  sb.channel('public:notifications')
+  sb.channel(`notifications-${currentUser.id}`)
     .on(
       'postgres_changes',
       {
@@ -120,7 +129,11 @@ function subscribeToNotifications() {
       },
       (payload) => {
         updateNotifBadge();
+        // Show toast for the incoming notification
         toast(`🔔 ${payload.new.title}`, 'success');
+        // If they are on notifications page refresh it
+        if (activeView === 't-notifications') renderNotifications();
+        if (activeView === 'l-notifications') renderNotifications();
       }
     )
     .subscribe();

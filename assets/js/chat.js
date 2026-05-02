@@ -218,7 +218,7 @@ async function sendMsg(containerId, otherId) {
     return;
   }
 
-  // Notify the recipient
+  // Always notify the OTHER person — works for both tenant and landlord
   await createNotification(
     otherId,
     `New message from ${currentUser.name}`,
